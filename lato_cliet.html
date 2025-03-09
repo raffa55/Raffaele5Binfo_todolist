@@ -18,5 +18,34 @@
       </div>
    </div>
    <script src="./index.js"></script>
+   <form id="todoForm">
+      <label for="name">Nome:</label>
+      <input type="text" id="name" name="name" required>
+   
+      <label for="data">Data:</label>
+      <input type="datetime-local" id="data" name="data" required>
+   
+      <button type="submit">Aggiungi TODO</button>
+   </form>
+   <script src="document.getElementById('todoForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const name = document.getElementById('name').value;
+      const data = document.getElementById('data').value;
+      
+      fetch('/aggiungi', {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json'
+         },
+         body: JSON.stringify({ name, completed: false, data })
+      })
+      .then(response => response.json())
+      .then(data => {
+         console.log('Success:', data);
+      })
+      .catch(error => {
+         console.error('Error:', error);
+      });
+   });"></script>
 </body>
 </html>

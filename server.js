@@ -78,3 +78,64 @@ const server = http.createServer(app);
 server.listen(5600, () => {
   console.log("- server running");
 });
+
+CREATE TABLE IF NOT EXISTS todo (
+   id INT PRIMARY KEY AUTO_INCREMENT, 
+   name VARCHAR(255) NOT NULL, 
+   completed BOOLEAN, 
+   data DATETIME NOT NULL
+);
+
+ALTER TABLE todo ADD COLUMN data DATETIME NOT NULL;
+
+const createTable = () => {
+   return executeQuery(`
+      CREATE TABLE IF NOT EXISTS todo (
+         id INT PRIMARY KEY AUTO_INCREMENT, 
+         name VARCHAR(255) NOT NULL, 
+         completed BOOLEAN, 
+         data DATETIME NOT NULL
+      )
+   `);
+};
+
+const insert = (todo) => {
+   const template = `
+   INSERT INTO todo (name, completed, data) VALUES ('$NAME', '$COMPLETED', '$DATA')
+   `;
+   let sql = template.replace("$NAME", todo.name);
+   sql = sql.replace("$COMPLETED", todo.completed);
+   sql = sql.replace("$DATA", todo.data);
+   return executeQuery(sql);
+};
+
+const select = () => {
+   const sql = `
+   SELECT id, name, completed, data FROM todo
+   `;
+   return executeQuery(sql);
+};
+
+const update = (todo) => {
+   let sql = `
+   UPDATE todo
+   SET completed=$COMPLETED, data='$DATA'
+   WHERE id=$ID
+   `;
+   sql = sql.replace("$ID", todo.id);
+   sql = sql.replace("$COMPLETED", todo.completed);
+   sql = sql.replace("$DATA", todo.data);
+   return executeQuery(sql);
+};
+
+const delete = (id) => {
+   const sql = `
+   DELETE FROM todo
+   WHERE id=$ID
+   `;
+   sql = sql.replace("$ID", id);
+   return executeQuery(sql);
+};
+
+
+
